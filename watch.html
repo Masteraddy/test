@@ -11,10 +11,17 @@
       href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap"
       rel="stylesheet"
     />
+    <!-- <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.6.2/flv.min.js"
+      integrity="sha512-49OFf+8jaHx4Vb7iFNb46Loq1pIxXlEYeVOQRIx0KLBRF4KSV6E7QK2Vw5r416TQDyBJW+DFh2CyTV7+gCWd6g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script> -->
     <script src="/flv.js"></script>
   </head>
   <body class="dark">
     <div class="app-container">
+      <button id="setting" class="hidden"></button>
       <button class="mode-switch">
         <svg
           class="sun"
@@ -47,16 +54,36 @@
         </svg>
       </button>
       <div class="app-main">
-        <div class="video-call-wrapper" style="background-color: #373c648e">
+        <div class="video-call-wrapper" style="background-color: #000000">
           <div class="video-participant">
+            <a class="status" style="z-index: 99; display: flex; align-items: center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="feather feather-users"
+              >
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span style="padding: 5px 8px; border-radius: 100%" id="livecount">0</span></a
+            >
             <div class="participant-actions">
               <button class="btn-mute hidden"></button>
               <button class="btn-camera hidden"></button>
             </div>
-            <video id="video1" style="height: 100%; width: 100%"></video>
+            <video id="video1" autoplay controls muted style="height: 100%; width: 100%"></video>
           </div>
         </div>
-        <div class="video-call-actions">
+        <div class="video-call-actions hidden">
           <button class="video-action-button play" id="play-btn"></button>
           <!-- <button class="video-action-button pause" id="camera-btn"></button> -->
           <button class="video-action-button maximize" onclick="window.fullScreen()"></button>
@@ -88,7 +115,7 @@
           <div class="chat-area"></div>
           <div class="chat-typing-area-wrapper">
             <div class="chat-typing-area">
-              <input type="text" placeholder="Type your meesage..." class="chat-input" />
+              <input type="text" placeholder="Type your message..." class="chat-input" />
               <button class="send-button">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -143,12 +170,16 @@
     <script>
       var videoElement = document.getElementById("video1");
       var flvPlayer;
+      let protocol = location.protocol == "http:" ? "http" : "https";
+      let port = location.protocol == "http:" ? "8000" : "8443";
       function streamLt(strname) {
+        let strLink = `${protocol}://${location.hostname}:${port}/live/${strname}.flv`;
+        // console.log(strLink);
         if (flvjs.isSupported()) {
           flvPlayer = flvjs.createPlayer({
             type: "flv",
             isLive: true,
-            url: `${location.origin}/live/${strname}.flv`,
+            url: strLink,
           });
           flvPlayer.attachMediaElement(videoElement);
           flvPlayer.load();
@@ -193,6 +224,10 @@
           return;
         }
         pause();
+      });
+      document.addEventListener("DOMContentLoaded", function (event) {
+        //the event occurred
+        window.play();
       });
     </script>
     <!-- <script src="./control.js"></script> -->

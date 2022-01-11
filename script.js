@@ -1,5 +1,7 @@
 /** @format */
 
+// live-server html --https=C:/Users/Haryormeedey/AppData/Roaming/npm/node_modules/live-server-https
+
 function $(selector) {
   return document.querySelector(selector);
 }
@@ -19,11 +21,18 @@ $(".expand-btn").addEventListener("click", () => {
 });
 
 $("#setting").addEventListener("click", () => {
-  $(".modal").classList.remove("notvisible");
+  $(".modal").classList.remove("hidden");
 });
 
 $(".modal").addEventListener("click", (e) => {
   if (e.target == $(".modal")) {
-    $(".modal").classList.add("notvisible");
+    $(".modal").classList.add("hidden");
   }
 });
+
+function changeActive(selector) {
+  document.querySelectorAll(".nav-link").forEach((el, key) => {
+    el.classList.remove("active");
+  });
+  $(selector).classList.add("active");
+}
