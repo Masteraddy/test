@@ -94,7 +94,8 @@
           flvPlayer = flvjs.createPlayer({
             type: "flv",
             isLive: true,
-            url: `${location.origin}/live/${strname}.flv`,
+            // url: `${location.origin}/live/${strname}.flv`,
+            url: `https://live.trivoh.com:8443/live/${strname}.flv`,
           });
           // flvjs.Events();
           flvPlayer.attachMediaElement(videoElement);

@@ -8,7 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./style.css" />
     <link href="https://fonts.googleapis.com/css?family=Noto Sans" rel="stylesheet" />
-    <script src="/flv.js"></script>
+    <!-- <script src="/flv.js"></script> -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.6.2/flv.min.js"
+      integrity="sha512-49OFf+8jaHx4Vb7iFNb46Loq1pIxXlEYeVOQRIx0KLBRF4KSV6E7QK2Vw5r416TQDyBJW+DFh2CyTV7+gCWd6g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <script src="./nmrtc.min.js"></script>
   </head>
   <body class="dark">
@@ -216,6 +222,23 @@
               style="padding: 0; border: none"
               disabled
             />
+            <button class="send-button" style="margin-right: 8px" onclick="window.showKey()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="feather feather-eye"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
             <button class="send-button" onclick="window.copy('#streamkey')">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -429,9 +452,17 @@
         $("#rtmp-stream").style.display = "flex";
         changeActive("#live");
       });
+      function showKey() {
+        let strKey = $("#streamkey").type;
+        if (strKey == "password") {
+          $("#streamkey").type = "text";
+          return;
+        }
+        $("#streamkey").type = "password";
+      }
       var videoElement = document.getElementById("video2");
       var flvPlayer;
-      let protocol = location.protocol == "http:" ? "http" : "https";
+      let protocol = location.protocol == "http:" ? "ws" : "wss";
       let port = location.protocol == "http:" ? "8000" : "8443";
       streamLt(strname);
       function streamLt(strname) {

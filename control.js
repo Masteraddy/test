@@ -10,7 +10,8 @@ let streamInp = document.querySelector("#stream-link");
 let streamInp1 = document.querySelector("#stream-link1");
 let streamKeyInp = document.querySelector("#streamkey");
 const streamproto = location.protocol == "http:" ? "http" : "https";
-const strname = uuid.v4();
+let strname = uuid.v4();
+const strkey = uuid.v4();
 let countTimeout;
 let publiser;
 
