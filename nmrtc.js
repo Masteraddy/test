@@ -30,7 +30,6 @@ var nmRTC = (function () {
     }
   }
   return {
-    Player: class extends a {},
     Publisher: class extends a {
       constructor(a) {
         super(),
@@ -69,17 +68,13 @@ var nmRTC = (function () {
               b
                 .createOffer()
                 .then((a) => {
-                  console.log("a.sdp"), b.setLocalDescription(a);
+                  b.setLocalDescription(a);
                 })
                 .catch(this.handleError.bind(this)),
               (b.oniceconnectionstatechange = () => {
-                console.log(
-                  "oniceconnectionstatechange:"
-                  // this.pc.iceConnectionState
-                );
+                console.log("ice connection state changed");
               }),
               (b.onicecandidate = (b) => {
-                // console.log("b.candidate"),
                 null === b.candidate && (clearTimeout(c), a(!0));
               }),
               (this.pc = b);
@@ -92,7 +87,7 @@ var nmRTC = (function () {
           else {
             let c = new WebSocket(a);
             (c.onopen = () => {
-              console.log("onopen"),
+              console.log("websocket open"),
                 c.send(
                   btoa(
                     JSON.stringify({
@@ -106,13 +101,12 @@ var nmRTC = (function () {
             }),
               (c.onmessage = (a) => {
                 let c = JSON.parse(atob(a.data));
-                // console.log("onmessage e=", c),
                 "onpublish" === c.method
                   ? (this.pc.setRemoteDescription(new RTCSessionDescription(c.description)), b(!0))
                   : "onerror" === c.method && (console.error(c.error), this.stop());
               }),
               (c.onclose = () => {
-                console.log("onclose");
+                console.log("websocket closed");
               }),
               (this.ws = c);
           }
@@ -134,7 +128,6 @@ var nmRTC = (function () {
             const newState = !track.enabled;
             track.enabled = newState;
             cb(track.enabled);
-            // console.log("Audio", track.enabled);
           }
         });
       }
@@ -145,18 +138,9 @@ var nmRTC = (function () {
             const newState = !track.enabled;
             track.enabled = newState;
             cb(track.enabled);
-            // console.log("Video", track.enabled);
           }
         });
       }
-      // stop both mic and camera
-      // stopBothVideoAndAudio() {
-      //   this.stream.getTracks().forEach(function (track) {
-      //     if (track.readyState == "live") {
-      //       track.stop();
-      //     }
-      //   });
-      // }
     },
   };
 })();
