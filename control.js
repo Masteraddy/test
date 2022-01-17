@@ -6,7 +6,6 @@ let micBtn = $("#mic-btn");
 let settingBtn = $("#settingbtn");
 let streamRTMP = $("#streamurl");
 let watchLink = $("#watchlink");
-let watchLink1 = $("#watchlink1");
 let streamKey = $("#streamkey");
 const strname = uuid.v4();
 const url = `https://live.trivoh.com:8443`;
@@ -15,14 +14,28 @@ const strLink = `${location.origin}/watch.html?uid=${strname}`;
 let countTimeout;
 let publiser;
 
-streamRTMP.value = rtmpLink;
-streamKey.value = strname;
-
 watchLink.value = strLink;
-watchLink1.value = strLink;
+// watchLink1.value = strLink;
 
+if (location.pathname == "/stream.html") {
+  streamRTMP.value = rtmpLink;
+  streamKey.value = strname;
+}
+if (location.pathname == "/" || location.pathname == "/index.html") {
+  camBtn.addEventListener("click", toggleVideo);
+  micBtn.addEventListener("click", toggleAudio);
+  startBtn.addEventListener("click", function (e) {
+    let isStopBtn = $("#start-btn").className.includes("deactive");
+    if (isStopBtn) {
+      stop();
+      return;
+    }
+    start();
+  });
+
+  init();
+}
 settingBtn.addEventListener("click", init);
-init();
 function init() {
   let audioDoc = $("select#audio");
   let videoDoc = $("select#video");
@@ -55,11 +68,23 @@ function init() {
     $("#start-btn").classList.add("deactive");
   });
   publiser.on("stop", () => {
+    let isRecStart = $("#rec-btn").classList.contains("animate-pulse");
+    if (isRecStart) {
+      $("#rec-btn").classList.add("bg-black");
+      $("#rec-btn").classList.remove("bg-trigreen");
+      $("#rec-btn").classList.remove("animate-pulse");
+    }
     $(".status").classList.add("hidden");
     $("#start-btn").classList.remove("deactive");
     clearInterval(countTimeout);
   });
   publiser.on("error", (error) => {
+    let isRecStart = $("#rec-btn").classList.contains("animate-pulse");
+    if (isRecStart) {
+      $("#rec-btn").classList.add("bg-black");
+      $("#rec-btn").classList.remove("bg-trigreen");
+      $("#rec-btn").classList.remove("animate-pulse");
+    }
     $(".status").classList.add("hidden");
     clearInterval(countTimeout);
     console.log("NMRTC Publisher on error", error);
@@ -71,7 +96,6 @@ function start() {
     let rtcLink = `wss://live.trivoh.com:8443/live/${strname}.rtc`;
     publiser.start(rtcLink);
     countTimeout = setInterval(() => {
-      getViews(strname, "#live-count1");
       getViews(strname, "#live-count");
     }, 5000);
     return;
@@ -103,6 +127,47 @@ function toggleVideo() {
   });
 }
 
+function startRec() {
+  // http://xx.com/api/record/{app}/{name}
+  // POST
+  let recUrl = `${url}/api/record/live/${strname}`;
+  postData(recUrl, "POST", {
+    filepath: "./record/live",
+    filename: `${strname}.mp4`,
+  }).then((data) => {
+    console.log(data);
+    if (data.code == 200) {
+      $("#rec-btn").classList.add("bg-trigreen");
+      $("#rec-btn").classList.add("animate-pulse");
+      $("#rec-btn").classList.remove("bg-black");
+      //Get recording from here and save it to api
+      return;
+    }
+    alert(data.error);
+  });
+}
+
+function stopRec() {
+  // http://xx.com/api/record/{app}/{name}
+  let recUrl = `${url}/api/record/live/${strname}`;
+  postData(recUrl, "DELETE").then((data) => {
+    $("#rec-btn").classList.add("bg-black");
+    $("#rec-btn").classList.remove("bg-trigreen");
+    $("#rec-btn").classList.remove("animate-pulse");
+
+    console.log(data);
+  });
+}
+
+$("#rec-btn").addEventListener("click", (e) => {
+  let isStart = $("#rec-btn").classList.contains("animate-pulse");
+  if (!isStart) {
+    startRec();
+    return;
+  }
+  stopRec();
+});
+
 function getViews(name, id) {
   let countEl = $(id);
   let streamAPI = `${url}/api/streams/live/${name}`;
@@ -111,17 +176,6 @@ function getViews(name, id) {
     .then((dt) => (countEl.innerHTML = dt?.data?.live[name]?.subcount || 0))
     .catch((err) => console.error(err));
 }
-
-camBtn.addEventListener("click", toggleVideo);
-micBtn.addEventListener("click", toggleAudio);
-startBtn.addEventListener("click", function (e) {
-  let isStopBtn = $("#start-btn").className.includes("deactive");
-  if (isStopBtn) {
-    stop();
-    return;
-  }
-  start();
-});
 
 navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
 

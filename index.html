@@ -16,8 +16,71 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <link rel="stylesheet" href="/output.css" />
+    <link rel="stylesheet" href="./output.css" />
     <script src="./nmrtc.js"></script>
+    <style>
+      .video {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .video-container {
+        /* width is set as 100% here. any width can be specified as per requirement */
+        width: 100%;
+        padding-top: 56.25%;
+        height: 0px;
+        position: relative;
+      }
+      .deactive:after {
+        content: "";
+        width: 2.5rem;
+        height: 3px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background-color: #fff;
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+      .show-menu {
+        width: 14rem;
+      }
+      @media (max-width: 768px) {
+        .show-menu {
+          width: 100%;
+        }
+      }
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 150%;
+        left: 50%;
+        margin-left: -60px;
+      }
+
+      .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: black transparent transparent transparent;
+      }
+
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+      }
+    </style>
   </head>
   <body class="dark overflow-hidden bg-tribg">
     <header
@@ -67,140 +130,54 @@
         <nav class="flex flex-col text-gray-800 dark:text-gray-300 mt-20">
           <a
             id="stream-navbtn"
+            href="./stream.html"
             class="flex cursor-pointer items-center py-2 nav-link"
-            onclick="changeActive('#stream-navbtn', '#livestream')"
           >
-            <img src="/stream.svg" class="px-3 h-7" alt="" />
+            <img src="./stream.svg" class="px-3 h-7" alt="" />
             <span class="">Stream</span>
           </a>
           <a
             id="webcam-navbtn"
+            href="./"
             class="flex cursor-pointer items-center py-2 bg-trigreen nav-link"
-            onclick="changeActive('#webcam-navbtn', '#webcam')"
           >
-            <img src="/camera.svg" class="px-3 h-7" alt="" />
+            <img src="./camera.svg" class="px-3 h-7" alt="" />
             <span class="">Webcam</span>
           </a>
           <a id="setting-navbtn" class="flex cursor-pointer items-center py-2 nav-link">
-            <img src="/settings.svg" class="px-3 h-7" alt="" />
+            <img src="./settings.svg" class="px-3 h-7" alt="" />
             <span class="">Settings</span>
           </a>
         </nav>
       </aside>
-      <section class="main-screen h-screen w-full mt-14 overflow-y-scroll hidden" id="livestream">
-        <div class="flex relative bg-black w-full md:w-4/6 max-w-2xl h-3/6 md:h-4/6 max-h-96">
-          <a class="absolute top-5 bg-red-500 text-red-50 flex items-center px-2"
-            >LIVE <span style="padding: 5px 8px; border-radius: 100%" id="live-count1">0</span></a
-          >
-          <video id="video1" style="height: 100%; width: 100%" autoplay muted></video>
-        </div>
-        <div class="flex flex-col my-2 text-gray-200 w-full md:w-4/6 max-w-2xl p-3 mb-32">
-          <h3 class="border-b border-gray-500 py-3">Streaming Settings</h3>
-          <label for="" class="pt-2 text-gray-400">Stream Url</label>
-          <div class="flex relative">
-            <input
-              type="text"
-              id="streamurl"
-              disabled
-              placeholder="rtmp://live.trivoh.com/live"
-              class="bg-tribg w-full border-b p-2 border-gray-500 outline-none"
-            />
-            <button class="absolute top-3 right-0" onclick="copy('#streamurl')">
-              <svg
-                width="22"
-                height="25"
-                viewBox="0 0 22 25"
-                fill="none"
-                class="w-4"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M15.625 21.875V23.8281C15.625 24.4753 15.1003 25 14.4531 25H1.17188C0.524658 25 0 24.4753 0 23.8281V5.85938C0 5.21216 0.524658 4.6875 1.17188 4.6875H4.6875V19.1406C4.6875 20.6484 5.91411 21.875 7.42188 21.875H15.625ZM15.625 5.07812V0H7.42188C6.77466 0 6.25 0.524658 6.25 1.17188V19.1406C6.25 19.7878 6.77466 20.3125 7.42188 20.3125H20.7031C21.3503 20.3125 21.875 19.7878 21.875 19.1406V6.25H16.7969C16.1523 6.25 15.625 5.72266 15.625 5.07812ZM21.5318 3.56304L18.312 0.343213C18.0922 0.123458 17.7941 1.62498e-06 17.4833 0L17.1875 0V4.6875H21.875V4.39165C21.875 4.08086 21.7515 3.7828 21.5318 3.56304Z"
-                  fill="white"
-                />
-              </svg>
-            </button>
-          </div>
-          <label for="" class="pt-2 text-gray-400">Stream Key</label>
-          <div class="flex relative">
-            <input
-              type="password"
-              id="streamkey"
-              placeholder="************************"
-              disabled
-              class="bg-tribg w-full border-b p-2 border-gray-500 outline-none"
-            />
-            <button class="absolute top-3 right-0" onclick="copy('#streamkey')">
-              <svg
-                width="22"
-                height="25"
-                viewBox="0 0 22 25"
-                fill="none"
-                class="w-4"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M15.625 21.875V23.8281C15.625 24.4753 15.1003 25 14.4531 25H1.17188C0.524658 25 0 24.4753 0 23.8281V5.85938C0 5.21216 0.524658 4.6875 1.17188 4.6875H4.6875V19.1406C4.6875 20.6484 5.91411 21.875 7.42188 21.875H15.625ZM15.625 5.07812V0H7.42188C6.77466 0 6.25 0.524658 6.25 1.17188V19.1406C6.25 19.7878 6.77466 20.3125 7.42188 20.3125H20.7031C21.3503 20.3125 21.875 19.7878 21.875 19.1406V6.25H16.7969C16.1523 6.25 15.625 5.72266 15.625 5.07812ZM21.5318 3.56304L18.312 0.343213C18.0922 0.123458 17.7941 1.62498e-06 17.4833 0L17.1875 0V4.6875H21.875V4.39165C21.875 4.08086 21.7515 3.7828 21.5318 3.56304Z"
-                  fill="white"
-                />
-              </svg>
-            </button>
-          </div>
-          <label for="" class="pt-2 text-gray-400">Watch Live</label>
-          <div class="flex relative">
-            <input
-              type="text"
-              disabled
-              id="watchlink"
-              placeholder="https://live.trivoh.com:8443/watch.html?uid=********"
-              class="bg-tribg w-full border-b p-2 border-gray-500 outline-none"
-            />
-            <button class="absolute top-3 right-0" onclick="copy('#watchlink')">
-              <svg
-                width="22"
-                height="25"
-                viewBox="0 0 22 25"
-                fill="none"
-                class="w-4"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M15.625 21.875V23.8281C15.625 24.4753 15.1003 25 14.4531 25H1.17188C0.524658 25 0 24.4753 0 23.8281V5.85938C0 5.21216 0.524658 4.6875 1.17188 4.6875H4.6875V19.1406C4.6875 20.6484 5.91411 21.875 7.42188 21.875H15.625ZM15.625 5.07812V0H7.42188C6.77466 0 6.25 0.524658 6.25 1.17188V19.1406C6.25 19.7878 6.77466 20.3125 7.42188 20.3125H20.7031C21.3503 20.3125 21.875 19.7878 21.875 19.1406V6.25H16.7969C16.1523 6.25 15.625 5.72266 15.625 5.07812ZM21.5318 3.56304L18.312 0.343213C18.0922 0.123458 17.7941 1.62498e-06 17.4833 0L17.1875 0V4.6875H21.875V4.39165C21.875 4.08086 21.7515 3.7828 21.5318 3.56304Z"
-                  fill="white"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
       <section
         class="main-screen h-screen w-full bg-black flex justify-center items-center"
         id="webcam"
       >
-        <a class="absolute status top-16 bg-red-500 text-red-50 flex items-center px-2 hidden"
+        <a class="z-10 absolute status top-16 bg-red-500 text-red-50 flex items-center px-2 hidden"
           >LIVE <span style="padding: 5px 8px; border-radius: 100%" id="live-count">0</span></a
         >
-        <video id="webcamvideo" autoplay muted class="w-full h-8/10"></video>
+        <div class="video-container">
+          <video id="webcamvideo" autoplay muted class="video"></video>
+        </div>
       </section>
       <section
         id="chat"
-        class="h-screen z-50 w-full hidden top-0 right-0 py-8 md:w-72 xl:w-1/5 bg-tribg absolute"
+        class="h-screen z-50 w-full hidden top-0 right-0 py-8 md:w-72 xl:w-1/5 bg-tribg absolute md:relative"
       >
         <button id="chat-close" class="h-8 w-8 absolute top-0 right-0 text-green-100 bg-gray-600">
           X
         </button>
         <div class="flex flex-col h-full p-5">
           <div class="flex text-gray-200 justify-around">
-            <a href="#">Chat</a>
-            <a href="#">Q&A</a>
-            <a href="#">Polls</a>
+            <a href="#">Comments</a>
           </div>
           <div class="h-full"></div>
           <div class="relative mb-8 md:mb-0">
             <input
               type="text"
-              class="w-full rounded-full bg-black p-2"
-              placeholder="Type Message Here..."
+              class="w-full rounded-full bg-black p-2 text-gray-200"
+              placeholder="Drop your comment..."
             />
             <button class="absolute rounded-full bg-trigreen top-0 right-0 flex p-2 justify-center">
               <svg
@@ -225,7 +202,7 @@
     >
       <button
         id="start-btn"
-        class="relative mx-2 flex items-center justify-center bg-red-600 hover:bg-red-400 h-10 w-10 rounded-md"
+        class="relative tooltip mx-2 flex items-center justify-center bg-red-600 hover:bg-red-400 h-10 w-10 rounded-md"
       >
         <svg
           width="22"
@@ -254,10 +231,11 @@
             </clipPath>
           </defs>
         </svg>
+        <span class="tooltiptext">Go Live</span>
       </button>
       <button
         id="mic-btn"
-        class="relative mx-2 flex items-center justify-center border border-trigreen bg-black hover:bg-trigreen h-10 w-10 rounded-md"
+        class="relative tooltip mx-2 flex items-center justify-center border border-trigreen bg-black hover:bg-trigreen h-10 w-10 rounded-md"
       >
         <svg
           width="22"
@@ -279,10 +257,11 @@
             fill="white"
           />
         </svg>
+        <span class="tooltiptext">Toggle Mic</span>
       </button>
       <button
         id="cam-btn"
-        class="relative mx-2 flex items-center border border-trigreen justify-center bg-black hover:bg-trigreen h-10 w-10 rounded-md"
+        class="relative tooltip mx-2 flex items-center border border-trigreen justify-center bg-black hover:bg-trigreen h-10 w-10 rounded-md"
       >
         <svg
           width="24"
@@ -306,10 +285,11 @@
             stroke-linejoin="round"
           />
         </svg>
+        <span class="tooltiptext">Toggle Camera</span>
       </button>
       <button
         id="chat-btn"
-        class="relative mx-2 flex items-center border border-trigreen justify-center bg-black hover:bg-trigreen h-10 w-10 rounded-md"
+        class="relative tooltip mx-2 flex items-center border border-trigreen justify-center bg-black hover:bg-trigreen h-10 w-10 rounded-md"
       >
         <svg
           width="19"
@@ -327,10 +307,34 @@
             fill="white"
           />
         </svg>
+        <span class="tooltiptext">Toggle Comment</span>
+      </button>
+      <button
+        id="share-btn"
+        onclick="window.copy('#watchlink')"
+        class="relative tooltip mx-2 flex items-center border border-trigreen justify-center bg-black hover:bg-trigreen h-10 w-10 rounded-md"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#FFF"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-share"
+        >
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+          <polyline points="16 6 12 2 8 6"></polyline>
+          <line x1="12" y1="2" x2="12" y2="15"></line>
+        </svg>
+        <span class="tooltiptext">Share</span>
       </button>
       <button
         id="rec-btn"
-        class="relative mx-2 flex items-center border border-trigreen justify-center bg-black hover:bg-trigreen h-10 w-10 rounded-md"
+        class="relative tooltip mx-2 flex items-center border border-trigreen justify-center bg-black hover:bg-trigreen h-10 w-10 rounded-md"
       >
         <svg
           width="29"
@@ -360,6 +364,7 @@
             </clipPath>
           </defs>
         </svg>
+        <span class="tooltiptext">Record</span>
       </button>
     </footer>
     <!-- component -->
@@ -373,12 +378,12 @@
           <div class="flex relative">
             <input
               type="text"
-              id="watchlink1"
+              id="watchlink"
               placeholder="https://live.trivoh.com:8443/watch.html?uid=********"
               disabled
               class="bg-tribg w-full border-b p-2 border-gray-500 outline-none"
             />
-            <button class="absolute top-3 right-0" onclick="copy('#watchlink1')">
+            <button class="absolute top-3 right-0" onclick="copy('#watchlink')">
               <svg
                 width="22"
                 height="25"
@@ -416,6 +421,9 @@
     </div>
     <script src="./ui-control.js"></script>
     <script src="./control.js"></script>
-    <script src="./indexwatch.js"></script>
+    <script>
+      
+    </script>
+    <!-- <script src="./indexwatch.js"></script> -->
   </body>
 </html>

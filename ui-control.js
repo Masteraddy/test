@@ -66,3 +66,16 @@ function copy(selector) {
       alert("something went wrong");
     });
 }
+
+async function postData(url = "", method = "POST", data = {}) {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: method,
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(data),
+  });
+  return response.json();
+}
