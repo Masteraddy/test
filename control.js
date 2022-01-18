@@ -131,16 +131,24 @@ function startRec() {
   // http://xx.com/api/record/{app}/{name}
   // POST
   let recUrl = `${url}/api/record/live/${strname}`;
+  let recSaver = `https://ecare.trvendors.com/api/save-recording/post`;
   postData(recUrl, "POST", {
     filepath: "./record/live",
     filename: `${strname}.mp4`,
   }).then((data) => {
-    console.log(data);
+    // console.log(data);
     if (data.code == 200) {
       $("#rec-btn").classList.add("bg-trigreen");
       $("#rec-btn").classList.add("animate-pulse");
       $("#rec-btn").classList.remove("bg-black");
       //Get recording from here and save it to api
+      let videoUrl = `${url}/record/live/${strname}.mp4`;
+      postData(recSaver, "POST", {
+        slug: strname,
+        recording_link: videoUrl,
+      }).then((data) => {
+        console.log(data);
+      });
       return;
     }
     alert(data.error);
