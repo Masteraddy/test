@@ -198,7 +198,7 @@
 
       function play() {
         let urlinfo = new URLSearchParams(location.search);
-        let strname = urlinfo.get("stream");
+        let strname = urlinfo.get("uid");
         if (strname !== "") {
           streamLt(strname);
           countTimeout = setInterval(() => {
