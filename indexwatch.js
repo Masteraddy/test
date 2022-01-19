@@ -16,11 +16,11 @@ function streamLt() {
     flvPlayer.attachMediaElement(videoElement);
     flvPlayer.load();
     flvPlayer.play();
-    startRec();
+    startReco();
   }
 }
 
-function startRec() {
+function startReco() {
   // http://xx.com/api/record/{app}/{name}
   // POST
   let recUrl = `${url}/api/record/live/${strname}`;
@@ -42,7 +42,7 @@ function startRec() {
       return;
     }
     setTimeout(() => {
-      startRec();
+      startReco();
     }, 5000);
   });
 }
