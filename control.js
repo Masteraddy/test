@@ -14,6 +14,8 @@ const strLink = `${location.origin}/watch.html?uid=${strname}`;
 let countTimeout;
 let publiser;
 
+let autoRecord = true;
+
 watchLink.value = strLink;
 // watchLink1.value = strLink;
 
@@ -66,25 +68,16 @@ function init() {
   publiser.on("start", () => {
     $(".status").classList.remove("hidden");
     $("#start-btn").classList.add("deactive");
+    if (autoRecord === true) {
+      startRec();
+    }
   });
   publiser.on("stop", () => {
-    let isRecStart = $("#rec-btn").classList.contains("animate-pulse");
-    if (isRecStart) {
-      $("#rec-btn").classList.add("bg-black");
-      $("#rec-btn").classList.remove("bg-trigreen");
-      $("#rec-btn").classList.remove("animate-pulse");
-    }
     $(".status").classList.add("hidden");
     $("#start-btn").classList.remove("deactive");
     clearInterval(countTimeout);
   });
   publiser.on("error", (error) => {
-    let isRecStart = $("#rec-btn").classList.contains("animate-pulse");
-    if (isRecStart) {
-      $("#rec-btn").classList.add("bg-black");
-      $("#rec-btn").classList.remove("bg-trigreen");
-      $("#rec-btn").classList.remove("animate-pulse");
-    }
     $(".status").classList.add("hidden");
     clearInterval(countTimeout);
     console.log("NMRTC Publisher on error", error);
@@ -138,9 +131,6 @@ function startRec() {
   }).then((data) => {
     // console.log(data);
     if (data.code == 200) {
-      $("#rec-btn").classList.add("bg-trigreen");
-      $("#rec-btn").classList.add("animate-pulse");
-      $("#rec-btn").classList.remove("bg-black");
       //Get recording from here and save it to api
       let videoUrl = `${url}/record/live/${strname}.mp4`;
       postData(recSaver, "POST", {
@@ -154,27 +144,6 @@ function startRec() {
     alert(data.error);
   });
 }
-
-function stopRec() {
-  // http://xx.com/api/record/{app}/{name}
-  let recUrl = `${url}/api/record/live/${strname}`;
-  postData(recUrl, "DELETE").then((data) => {
-    $("#rec-btn").classList.add("bg-black");
-    $("#rec-btn").classList.remove("bg-trigreen");
-    $("#rec-btn").classList.remove("animate-pulse");
-
-    console.log(data);
-  });
-}
-
-$("#rec-btn").addEventListener("click", (e) => {
-  let isStart = $("#rec-btn").classList.contains("animate-pulse");
-  if (!isStart) {
-    startRec();
-    return;
-  }
-  stopRec();
-});
 
 function getViews(name, id) {
   let countEl = $(id);
