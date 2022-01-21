@@ -7,7 +7,8 @@ let settingBtn = $("#settingbtn");
 let streamRTMP = $("#streamurl");
 let watchLink = $("#watchlink");
 let streamKey = $("#streamkey");
-const strname = uuid.v4();
+// const strname = uuid.v4();
+const strname = "fb15dae1-f00b-4dbe-8be3-db84a307fca2";
 const url = `https://live.trivoh.com:8443`;
 const rtmpLink = `rtmp://live.trivoh.com/live`;
 const strLink = `${location.origin}/watch.html?uid=${strname}`;
@@ -123,16 +124,17 @@ function toggleVideo() {
 function startRec() {
   // http://xx.com/api/record/{app}/{name}
   // POST
+  let count = randomString(5);
   let recUrl = `${url}/api/record/live/${strname}`;
   let recSaver = `https://ecare.trvendors.com/api/save-recording/post`;
   postData(recUrl, "POST", {
     filepath: "./record/live",
-    filename: `${strname}.mp4`,
+    filename: `${strname}-${count}.mp4`,
   }).then((data) => {
     // console.log(data);
     if (data.code == 200) {
       //Get recording from here and save it to api
-      let videoUrl = `${url}/record/live/${strname}.mp4`;
+      let videoUrl = `${url}/record/live/${strname}-${count}.mp4`;
       postData(recSaver, "POST", {
         slug: strname,
         recording_link: videoUrl,
